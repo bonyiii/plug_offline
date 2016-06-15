@@ -20,19 +20,24 @@ defmodule Plug.PlugOffline do
 
   @spec cache_content(map) :: String.t
   def cache_content(options) do
-    body = ['CACHE MANIFEST']
+    body = ["CACHE MANIFEST"]
+
     body = options[:cache] ++ body
     if(options[:network] && options[:network] != []) do
-      body = ['NETWORK' | body]
+      body = ["NETWORK:" | body]
       body = options[:network] ++ body
     end
     if(options[:fallback] && options[:fallback] != []) do
-      body = ['FALLBACK' | body]
+      body = ["FALLBACK:" | body]
       body = options[:fallback] ++ body
     end
 
     body
     |> Enum.reverse
     |> Enum.join("\n")
+  end
+
+  def cache_key do
+    "# #{:os.system_time(:seconds)}"
   end
 end
