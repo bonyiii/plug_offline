@@ -20,9 +20,7 @@ defmodule Plug.PlugOffline do
 
   @spec cache_content(map) :: String.t
   def cache_content(options) do
-    #body = ["CACHE MANIFEST", cache_key(options[:cache])]
-    body = ["CACHE MANIFEST"]
-
+    body = [cache_key(options[:cache], options[:base_path]), "CACHE MANIFEST"]
     body = options[:cache] ++ body
     if(options[:network] && options[:network] != []) do
       body = ["NETWORK:" | body]
@@ -38,23 +36,39 @@ defmodule Plug.PlugOffline do
     |> Enum.join("\n")
   end
 
-  def cache_key(keys) do
+  @spec cache_key(nil, String.t) :: String.t
+  defp cache_key(nil, _path) do
+    ''
+  end
+
+  @spec cache_key(list(String.t), String.t) :: String.t
+  defp cache_key(keys, base_path) do
     keys
     |> Enum.sort
-    |> sha_for_file
+    |> Enum.map(&digest_file_content(&1, base_path))
+    |> Enum.join
     |> magic_comment
   end
 
-  defp sha_for_file(file_name) do
-    path = Path.join([__ENV__.file, '../test', file_name])
-    IO.puts path
-    case File.read(path) do
+  defp digest_file_content(file_name, nil) do
+    read_file(file_name)
+  end
+
+  @spec digest_file_content(String.t, String.t) :: String.t
+  defp digest_file_content(file_name, base_path) do
+    read_file(Path.join([base_path, file_name]))
+  end
+
+  @spec read_file(String.t) :: String.t
+  defp read_file(file) do
+    case File.read(file) do
       { :ok, body } ->
         :crypto.hash(:sha256, body) |> Base.encode16
       { :error, _reason } -> ''
     end
   end
 
+  @spec magic_comment(String.t) :: String.t
   defp magic_comment(text) do
     "# #{:crypto.hash(:sha256, text) |> Base.encode16}"
   end
