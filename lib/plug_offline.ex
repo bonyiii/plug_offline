@@ -20,6 +20,7 @@ defmodule Plug.PlugOffline do
 
   @spec cache_content(map) :: String.t
   def cache_content(options) do
+    #body = ["CACHE MANIFEST", cache_key(options[:cache])]
     body = ["CACHE MANIFEST"]
 
     body = options[:cache] ++ body
@@ -37,7 +38,25 @@ defmodule Plug.PlugOffline do
     |> Enum.join("\n")
   end
 
-  def cache_key do
-    "# #{:os.system_time(:seconds)}"
+  def cache_key(keys) do
+    keys
+    |> Enum.sort
+    |> sha_for_file
+    |> magic_comment
   end
+
+  defp sha_for_file(file_name) do
+    path = Path.join([__ENV__.file, '../test', file_name])
+    IO.puts path
+    case File.read(path) do
+      { :ok, body } ->
+        :crypto.hash(:sha256, body) |> Base.encode16
+      { :error, _reason } -> ''
+    end
+  end
+
+  defp magic_comment(text) do
+    "# #{:crypto.hash(:sha256, text) |> Base.encode16}"
+  end
+
 end

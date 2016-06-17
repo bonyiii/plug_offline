@@ -24,7 +24,7 @@ defmodule Plug.PlugOfflineTest do
   test 'only cache manifest set' do
     conn = conn(:get, "/cache.manifest")  |> call(
       at: "/cache.manifest",
-      cache: ["js/app.js", "js/bundle.js"]
+      cache: ["test/js/app.js", "js/bundle.js"]
     )
     { status, _headers, body } = sent_resp(conn)
 

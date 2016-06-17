@@ -4,7 +4,7 @@ defmodule PlugOffline.Mixfile do
   def project do
     [app: :plug_offline,
      version: "0.0.1",
-     elixir: "~> 1.2-rc",
+     elixir: "~> 1.0",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps]
