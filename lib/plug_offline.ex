@@ -45,17 +45,18 @@ defmodule Plug.PlugOffline do
   defp cache_key(keys, base_path) do
     keys
     |> Enum.sort
-    |> Enum.map(&digest_file_content(&1, base_path))
+    |> Enum.map(&digest_file(&1, base_path))
     |> Enum.join
     |> magic_comment
   end
 
-  defp digest_file_content(file_name, nil) do
+  @spec digest_file(String.t, nil) :: String.t
+  defp digest_file(file_name, nil) do
     read_file(file_name)
   end
 
-  @spec digest_file_content(String.t, String.t) :: String.t
-  defp digest_file_content(file_name, base_path) do
+  @spec digest_file(String.t, String.t) :: String.t
+  defp digest_file(file_name, base_path) do
     read_file(Path.join([base_path, file_name]))
   end
 
@@ -72,5 +73,4 @@ defmodule Plug.PlugOffline do
   defp magic_comment(text) do
     "# #{:crypto.hash(:sha256, text) |> Base.encode16}"
   end
-
 end
