@@ -4,6 +4,10 @@
 
 This plug tries to mimic [wycats/rack-offline](https://github.com/wycats/rack-offline) gem's behaviour in elixir. Read its description first, it explains a lot.
 
+Word of warning: Application cache [already deprecated](https://developer.mozilla.org/en-US/docs/Web/HTML/Using_the_application_cache) but the alternative [service workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) is experimental.
+
+Though Application Cache has some issues, it still widely supported, check browser for [service workers](http://caniuse.com/#feat=serviceworkers) and [application cache](http://caniuse.com/#feat=offline-apps) 
+
 ## Usage
 
 Add the following lines to: lib/my_app/endpoint.ex
