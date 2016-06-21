@@ -1,6 +1,8 @@
 # PlugOffline
 
-**TODO: Add description**
+This plug tries to mimic [wycats/rack-offline](https://github.com/wycats/rack-offline) gem's behaviour in elixir.
+
+
 
 ## Installation
 
