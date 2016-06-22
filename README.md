@@ -15,6 +15,7 @@ Add the following lines to: lib/my_app/endpoint.ex
 ```elixir
   plug Plug.PlugOffline,
   at: "/cache.manifest",
+  base_path: Path.join(Path.dirname(__ENV__.file), "../../priv/static"),
   cache: [],
   network: [],
   fallback: []
@@ -24,7 +25,8 @@ Add the following lines to: lib/my_app/endpoint.ex
 key | mandatory | value | example 
 ----|-----------|-------|--------
 at  | X | at this url will cache manifest file provided eg: www.myapp.com/cache.manifest | "/cache.manifest"
-cache | X |list of files that should be in the cache | ["js/app.js", "css/app.css"]
+base_path | X | base path for assets files eg: /js/app.js will be looked up like this /priv/static/js/app.js | Path.join(Path.dirname(__ENV__.file), "../../priv/static")
+cache | X |list of files that should be in the cache | ["/js/app.js", "/css/app.css"]
 network |  | list of endopoints which are available only when app is online | ["/api"]
 fallback |  |what to provide instead of large assets when app offline | ["images/large/ images/offline.jpg"]
 
