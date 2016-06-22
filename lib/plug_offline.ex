@@ -21,7 +21,15 @@ defmodule Plug.PlugOffline do
   @spec cache_content(map) :: String.t
   def cache_content(options) do
     body = [cache_key(options[:cache], options[:base_path]), "CACHE MANIFEST"]
-    body = options[:cache] ++ body
+
+    if options[:offline_asset] do
+      if Mix.env != :dev do
+        body = options[:cache] ++ body
+      end
+    else
+      body = options[:cache] ++ body
+    end
+
     if(options[:network] && options[:network] != []) do
       body = ["NETWORK:" | body]
       body = options[:network] ++ body
