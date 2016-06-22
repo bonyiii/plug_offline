@@ -23,7 +23,7 @@ defmodule Plug.PlugOffline do
     body = [cache_key(options[:cache], options[:base_path]), "CACHE MANIFEST"]
 
     if options[:offline_asset] do
-      if Mix.env != :dev do
+      if Mix.env == :dev do
         body = options[:cache] ++ body
       end
     else

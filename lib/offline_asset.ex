@@ -3,7 +3,7 @@ defmodule OfflineAsset do
     if opts[:url] do
       "<link href='#{(opts[:url])}', media='#{opts[:media] || "all"}', rel='stylesheet', type='text/css'></link>"
     else
-      if Mix.env != :dev do
+      if Mix.env == :dev do
         css_dev(opts)
       else
         css_other(opts)
@@ -15,7 +15,7 @@ defmodule OfflineAsset do
     if opts[:url] do
       "<script src='#{(opts[:url])}></script>"
     else
-      if Mix.env != :dev do
+      if Mix.env == :dev do
         js_dev(opts)
       else
         js_other(opts)
