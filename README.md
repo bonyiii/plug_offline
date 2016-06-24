@@ -9,16 +9,18 @@ Word of warning: Application cache [already deprecated](https://developer.mozill
 Though Application Cache has some issues, it still widely supported, check browser for [service workers](http://caniuse.com/#feat=serviceworkers) and [application cache](http://caniuse.com/#feat=offline-apps) 
 
 ## Usage
+Assuming phoenix framework, but should work wihtout it:
 
 Add the following lines to: lib/my_app/endpoint.ex
-Parameters are passed in a map.
+
+Parameters are passed in as a map.
 
 ```elixir
   plug Plug.PlugOffline, %{
   at: "/cache.manifest",
   base_path: Path.join(Path.dirname(__ENV__.file), "../../priv/static"),
   offline_asset: true,
-  inline: (Mix.env != :dev)
+  inline: Application.get_env(:ariadne, MyApp.Endpoint)[:inline_assets],
   cache: [],
   network: [],
   fallback: [] }
@@ -29,8 +31,8 @@ key | mandatory | value | example
 ----|-----------|-------|--------
 at  | X | at this url will cache manifest file provided eg: www.myapp.com/cache.manifest | "/cache.manifest"
 base_path | X | base path for assets files eg: /js/app.js will be looked up like this /priv/static/js/app.js | Path.join(Path.dirname(__ENV__.file), "../../priv/static")
-offline_asset| | use offline assets in views see optional enhancements | TRUE/FALSE
-inline| | if offline_asset is in use render assets inline in views | TRUE/FALSE
+offline_asset| | use offline assets in views, see optional offline assets section | TRUE/FALSE
+inline| | if offline_asset is in use render assets inline or not in views, see examples in offline assets section | TRUE/FALSE
 cache | X |list of files that should be in the cache | ["/js/app.js", "/css/app.css"]
 network |  | list of endopoints which are available only when app is online | ["/api"]
 fallback |  |what to provide instead of large assets when app offline | ["images/large/ images/offline.jpg"]
@@ -67,3 +69,89 @@ Currently only available through github:
           [applications: [:plug_offline]]
         end
 
+## Optional
+
+### Offline Assets
+
+Many time when one develop an application using App Cache face the problem that an assets served through HTTPS. This is a must for security but App Cache cannot handle it - at least I was not able to make it work. 
+
+If one tries to use the asset through CDN and HTTP but the app itself served through HTTPS you run into the mixed content error, modern browser gonna report error.
+
+The soultion is to pack everything into one huge HTML file in production.
+
+Using OfflineAssets
+
+web/templates/layout/app.html.eex
+
+````html
+<!DOCTYPE html>
+<html lang="en" manifest="/cache.manifest">
+  <head>
+  <%= raw OfflineAsset.css(
+      inline: Application.get_env(:ariadne, MyApp.Endpoint)[:inline_assets],
+      file_path: Path.join([MyApp.Endpoint.config(:root), "/priv/static/css/foundation.min.css"]),
+      static_path: static_path(@conn, "/css/foundation.min.css")) %>
+  </head>
+  <body>
+    ... Whatever ...
+ </body>
+  <%= raw OfflineAsset.js(
+      inline: Application.get_env(:ariadne, MyApp.Endpoint)[:inline_assets],
+      file_path: Path.join([MyApp.Endpoint.config(:root), "/priv/static/js/vendor.bundle.js"]),
+      static_path: static_path(@conn, "/js/vendor.bundle.js")) %>
+</html>
+````
+
+#### Development setup:
+
+conf/dev.exs
+
+```elixir
+config :my_app, MyApp.Endpoint,
+  inline_assets: false
+```
+
+Resulting: 
+
+````html
+<!DOCTYPE html>
+<html lang="en" manifest="/cache.manifest">
+  <head>
+   <link href='/css/foundation.min.css', media='all', rel='stylesheet', type='text/css'></link>
+  </head>
+  <body>
+    ... Whatever ...
+ </body>
+  <script src='/js/vendor.bundle.js'></script>
+</html>
+````
+
+#### Production setup
+
+conf/prod.exs
+
+```elixir
+config :my_app, MyApp.Endpoint,
+  inline_assets: true
+```
+
+Resulting: 
+
+````html
+<!DOCTYPE html>
+<html lang="en" manifest="/cache.manifest">
+  <head>
+   <style>
+     .nice: {
+      font-weight: bold;
+     }
+   </stlye>
+  </head>
+  <body>
+    ... Whatever ...
+ </body>
+  <script>
+    console.log("Nice")
+  </script>
+</html>
+````
