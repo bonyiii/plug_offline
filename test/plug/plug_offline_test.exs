@@ -61,7 +61,7 @@ defmodule Plug.PlugOfflineTest do
   test 'cache manifest and network and fallback are set and offline assets is in use and rendering inline' do
     conn = conn(:get, "/cache.manifest")  |> call(%{
       at: "/cache.manifest",
-      offline_assets: true,
+      offline_asset: true,
       inline: true,
       cache: ["/js/bundle.js"],
       network: ["/api"],
@@ -76,7 +76,7 @@ defmodule Plug.PlugOfflineTest do
   test 'cache manifest and network and fallback are set and offline assets is in use and rendering not inline' do
     conn = conn(:get, "/cache.manifest")  |> call(%{
       at: "/cache.manifest",
-      offline_assets: true,
+      offline_asset: true,
       cache: ["/js/bundle.js"],
       network: ["/api"],
       fallback: ["images/large images/offline.png"]}

@@ -32,7 +32,7 @@ defmodule Plug.PlugOffline do
   # When inline option present do not generate cache manifest entry for the assets file, though
   # the digest is still based on the content of all assets. Which make update possible when
   # assets changes
-  defp cache(%{offline_assets: true, inline: true} = _opts) do
+  defp cache(%{offline_asset: true, inline: true} = _opts) do
     []
   end
 
