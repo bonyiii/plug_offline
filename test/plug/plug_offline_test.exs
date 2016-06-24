@@ -22,10 +22,10 @@ defmodule Plug.PlugOfflineTest do
   end
 
   test 'only cache manifest set path provided' do
-    conn = conn(:get, "/cache.manifest")  |> call(
+    conn = conn(:get, "/cache.manifest")  |> call(%{
       at: "/cache.manifest",
       base_path: Path.join([Path.dirname(__ENV__.file), '/../']),
-      cache: ["/assets/app.js"]
+      cache: ["/assets/app.js"]}
     )
     { status, _headers, body } = sent_resp(conn)
 
@@ -34,10 +34,10 @@ defmodule Plug.PlugOfflineTest do
   end
 
   test 'cache manifest and network are set' do
-    conn = conn(:get, "/cache.manifest")  |> call(
+    conn = conn(:get, "/cache.manifest")  |> call(%{
       at: "/cache.manifest",
       cache: ["js/bundle.js"],
-      network: ["/api"]
+      network: ["/api"]}
     )
     { status, _headers, body } = sent_resp(conn)
 
@@ -46,23 +46,52 @@ defmodule Plug.PlugOfflineTest do
   end
 
   test 'cache manifest and network and fallback are set' do
-    conn = conn(:get, "/cache.manifest")  |> call(
+    conn = conn(:get, "/cache.manifest")  |> call(%{
       at: "/cache.manifest",
-      cache: ["js/bundle.js"],
+      cache: ["/js/bundle.js"],
       network: ["/api"],
-      fallback: ["images/large images/offline.png"]
+      fallback: ["images/large images/offline.png"]}
     )
     { status, _headers, body } = sent_resp(conn)
 
     assert status == 200
-    assert body == "CACHE MANIFEST\n# E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855\njs/bundle.js\nNETWORK:\n/api\nFALLBACK:\nimages/large images/offline.png"
+    assert body == "CACHE MANIFEST\n# E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855\n/js/bundle.js\nNETWORK:\n/api\nFALLBACK:\nimages/large images/offline.png"
+  end
+
+  test 'cache manifest and network and fallback are set and offline assets is in use and rendering inline' do
+    conn = conn(:get, "/cache.manifest")  |> call(%{
+      at: "/cache.manifest",
+      offline_assets: true,
+      inline: true,
+      cache: ["/js/bundle.js"],
+      network: ["/api"],
+      fallback: ["images/large images/offline.png"]}
+    )
+    { status, _headers, body } = sent_resp(conn)
+
+    assert status == 200
+    assert body == "CACHE MANIFEST\n# E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855\nNETWORK:\n/api\nFALLBACK:\nimages/large images/offline.png"
+  end
+
+  test 'cache manifest and network and fallback are set and offline assets is in use and rendering not inline' do
+    conn = conn(:get, "/cache.manifest")  |> call(%{
+      at: "/cache.manifest",
+      offline_assets: true,
+      cache: ["/js/bundle.js"],
+      network: ["/api"],
+      fallback: ["images/large images/offline.png"]}
+    )
+    { status, _headers, body } = sent_resp(conn)
+
+    assert status == 200
+    assert body == "CACHE MANIFEST\n# E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855\n/js/bundle.js\nNETWORK:\n/api\nFALLBACK:\nimages/large images/offline.png"
   end
 
   test 'only network set, cache manifest is missing' do
     assert_raise(ArgumentError, fn ->
-      conn(:get, "/cache.manifest")  |> call(
+      conn(:get, "/cache.manifest")  |> call(%{
         at: "/cache.manifest",
-        network: ["js/app"]
+        network: ["js/app"]}
       )
     end)
   end
