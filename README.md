@@ -11,14 +11,17 @@ Though Application Cache has some issues, it still widely supported, check brows
 ## Usage
 
 Add the following lines to: lib/my_app/endpoint.ex
+Parameters are passed in a map.
 
 ```elixir
-  plug Plug.PlugOffline,
+  plug Plug.PlugOffline, %{
   at: "/cache.manifest",
   base_path: Path.join(Path.dirname(__ENV__.file), "../../priv/static"),
+  offline_asset: true,
+  inline: (Mix.env != :dev)
   cache: [],
   network: [],
-  fallback: []
+  fallback: [] }
 
 ``` 
 
@@ -26,6 +29,8 @@ key | mandatory | value | example
 ----|-----------|-------|--------
 at  | X | at this url will cache manifest file provided eg: www.myapp.com/cache.manifest | "/cache.manifest"
 base_path | X | base path for assets files eg: /js/app.js will be looked up like this /priv/static/js/app.js | Path.join(Path.dirname(__ENV__.file), "../../priv/static")
+offline_asset| | use offline assets in views see optional enhancements | TRUE/FALSE
+inline| | if offline_asset is in use render assets inline in views | TRUE/FALSE
 cache | X |list of files that should be in the cache | ["/js/app.js", "/css/app.css"]
 network |  | list of endopoints which are available only when app is online | ["/api"]
 fallback |  |what to provide instead of large assets when app offline | ["images/large/ images/offline.jpg"]
