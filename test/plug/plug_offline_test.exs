@@ -24,13 +24,13 @@ defmodule Plug.PlugOfflineTest do
   test 'only cache manifest set path provided' do
     conn = conn(:get, "/cache.manifest")  |> call(
       at: "/cache.manifest",
-      base_path: Path.join([Path.dirname(__ENV__.file)]),
-      cache: ["/assets/app.js", "js/bundle.js"]
+      base_path: Path.join([Path.dirname(__ENV__.file), '/../']),
+      cache: ["/assets/app.js"]
     )
     { status, _headers, body } = sent_resp(conn)
 
     assert status == 200
-    assert body == "CACHE MANIFEST\n# AD935EF79291C23435C4FE7A00202CBE233A91B38048344F9C9CF0ECE0ABEF75\njs/bundle.js\n/assets/app.js"
+    assert body == "CACHE MANIFEST\n# AD935EF79291C23435C4FE7A00202CBE233A91B38048344F9C9CF0ECE0ABEF75\n/assets/app.js"
   end
 
   test 'cache manifest and network are set' do
