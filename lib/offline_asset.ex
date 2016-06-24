@@ -23,19 +23,19 @@ defmodule OfflineAsset do
     end
   end
 
-  defp css_inline(opts) do
+  defp css_file(opts) do
     "<link href='#{opts[:static_path]}', media='#{opts[:media] || "all"}', rel='stylesheet', type='text/css'></link>"
   end
 
-  defp css_file(opts) do
+  defp css_inline(opts) do
     "<style>#{(File.read!(Path.join([opts[:file_path]])))}</style>"
   end
 
-  defp js_inline(opts) do
+  defp js_file(opts) do
     "<script src='#{opts[:static_path]}'></script>"
   end
 
-  defp js_file(opts) do
+  defp js_inline(opts) do
     "<script type='text/javascript' async='async'>#{(File.read!(Path.join([opts[:file_path]])))}</script>"
   end
 end
