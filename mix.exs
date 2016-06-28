@@ -10,6 +10,7 @@ defmodule PlugOffline.Mixfile do
      name: "PlugOffline",
      source_url: "https://github.com/bonyiii/plug_offline",
      package: package,
+     description: description,
      deps: deps]
   end
 
