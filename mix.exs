@@ -4,9 +4,12 @@ defmodule PlugOffline.Mixfile do
   def project do
     [app: :plug_offline,
      version: "0.0.1",
-     elixir: "~> 1.0",
+     elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     name: "PlugOffline",
+     source_url: "https://github.com/bonyiii/plug_offline",
+     package: package,
      deps: deps]
   end
 
@@ -28,5 +31,20 @@ defmodule PlugOffline.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:plug, "~> 1.1"}]
+  end
+
+  defp description do
+    """
+    This package provides cache manifest file with digest and
+    file or inline assets helper for .eex templates.
+    """
+  end
+
+  defp package do
+    [
+      maintainers: ["bonyiii"],
+      licenses: ["Apache 2.0"],
+      links: %{"GitHub" => "https://github.com/bonyiii/plug_offline"}
+    ]
   end
 end
