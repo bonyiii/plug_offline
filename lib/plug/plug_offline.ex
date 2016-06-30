@@ -2,6 +2,11 @@ defmodule Plug.PlugOffline do
   import Plug.Conn
 
   @spec init(map) :: map
+  def init(%{cache_digest: true} = options) do
+    %{options | digest: cache_key(options[:cache], options[:base_path])}
+  end
+
+  @spec init(map) :: map
   def init(options) do
     options
   end
@@ -20,7 +25,8 @@ defmodule Plug.PlugOffline do
 
   @spec cache_content(map) :: String.t
   def cache_content(options) do
-    ["CACHE MANIFEST", cache_key(options[:cache], options[:base_path])]
+    digest = options[:digest] || cache_key(options[:cache], options[:base_path])
+    ["CACHE MANIFEST", digest]
     |> cache(options)
     |> network(options)
     |> fallback(options)
@@ -30,7 +36,7 @@ defmodule Plug.PlugOffline do
   # When inline option present do not generate cache manifest entry for the assets file, though
   # the digest is still based on the content of all assets. Which make update possible when
   # assets changes
-  defp cache(body, %{offline_asset: true, inline: true} = _opts) do
+  defp cache(body, %{offline_asset: true, inline: true}) do
     body
   end
 
@@ -39,16 +45,16 @@ defmodule Plug.PlugOffline do
   end
 
   # https://bordeltabernacle.github.io/2016/01/04/notes-on-elixir-pattern-matching-maps.html
-  defp network(body, %{network: _network} = opts) do
-    body ++ ["NETWORK:" | opts[:network]]
+  defp network(body, %{network: network_opts}) do
+    body ++ ["NETWORK:" | network_opts]
   end
 
   defp network(body, _opts) do
     body
   end
 
-  defp fallback(body, %{fallback: _fallback} = opts) do
-    body ++ ["FALLBACK:" | opts[:fallback]]
+  defp fallback(body, %{fallback: fallback_opts}) do
+    body ++ ["FALLBACK:" | fallback_opts]
   end
 
   defp fallback(body, _opts) do
