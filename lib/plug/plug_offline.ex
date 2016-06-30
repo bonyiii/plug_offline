@@ -6,7 +6,6 @@ defmodule Plug.PlugOffline do
     %{options | digest: cache_key(options[:cache], options[:base_path])}
   end
 
-  @spec init(map) :: map
   def init(options) do
     options
   end
@@ -23,7 +22,7 @@ defmodule Plug.PlugOffline do
     end
   end
 
-  @spec cache_content(map) :: String.t
+  @spec cache_content(map) :: binary
   def cache_content(options) do
     digest = options[:digest] || cache_key(options[:cache], options[:base_path])
     ["CACHE MANIFEST", digest]
@@ -36,6 +35,7 @@ defmodule Plug.PlugOffline do
   # When inline option present do not generate cache manifest entry for the assets file, though
   # the digest is still based on the content of all assets. Which make update possible when
   # assets changes
+  @spec cache(list(binary), map) :: list(String.t)
   defp cache(body, %{offline_asset: true, inline: true}) do
     body
   end
@@ -45,6 +45,7 @@ defmodule Plug.PlugOffline do
   end
 
   # https://bordeltabernacle.github.io/2016/01/04/notes-on-elixir-pattern-matching-maps.html
+  @spec network(list(String.t), map) :: list(String.t)
   defp network(body, %{network: network_opts}) do
     body ++ ["NETWORK:" | network_opts]
   end
@@ -53,6 +54,7 @@ defmodule Plug.PlugOffline do
     body
   end
 
+  @spec fallback(list(String.t), map) :: list(String.t)
   defp fallback(body, %{fallback: fallback_opts}) do
     body ++ ["FALLBACK:" | fallback_opts]
   end
@@ -88,14 +90,14 @@ defmodule Plug.PlugOffline do
   @spec read_file(String.t) :: String.t
   defp read_file(file) do
     case File.read(file) do
-      { :ok, body } ->
-        :crypto.hash(:sha256, body) |> Base.encode16
-      { :error, _reason } -> ''
+      {:ok, body} ->
+        :sha256 |> :crypto.hash(body) |> Base.encode16
+      {:error, _reason} -> ''
     end
   end
 
   @spec magic_comment(String.t) :: String.t
   defp magic_comment(text) do
-    "# #{:crypto.hash(:sha256, text) |> Base.encode16}"
+    "# #{:sha256 |> :crypto.hash(text) |> Base.encode16}"
   end
 end
