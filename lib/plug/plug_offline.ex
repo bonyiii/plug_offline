@@ -3,7 +3,7 @@ defmodule Plug.PlugOffline do
 
   @spec init(map) :: map
   def init(%{cache_digest: true} = options) do
-    %{options | digest: cache_key(options[:cache], options[:base_path])}
+    put_in(options[:digest], cache_key(options[:cache], options[:base_path]))
   end
 
   def init(options) do

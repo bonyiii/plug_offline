@@ -34,6 +34,12 @@ defmodule Plug.PlugOfflineTest do
   end
 
   test 'only cache manifest set path provided, available asset files read only once at boot time' do
+    Plug.PlugOffline.init(%{
+          at: "/cache.manifest",
+          cache_digest: true,
+          base_path: Path.join([Path.dirname(__ENV__.file), '/../']),
+          cache: ["/assets/app.js"]})
+
     conn = conn(:get, "/cache.manifest")  |> call(%{
           at: "/cache.manifest",
           cache_digest: true,
