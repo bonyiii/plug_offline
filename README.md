@@ -20,7 +20,7 @@ Parameters are passed in as a map.
   at: "/cache.manifest",
   base_path: Path.join(Path.dirname(__ENV__.file), "../../priv/static"),
   offline_asset: true,
-  inline: Application.get_env(:ariadne, MyApp.Endpoint)[:inline_assets],
+  inline: Application.get_env(:my_app, MyApp.Endpoint)[:inline_assets],
   cache: [],
   network: [],
   fallback: [] }
@@ -88,7 +88,7 @@ web/templates/layout/app.html.eex
 <html lang="en" manifest="/cache.manifest">
   <head>
   <%= raw OfflineAsset.css(
-      inline: Application.get_env(:ariadne, MyApp.Endpoint)[:inline_assets],
+      inline: Application.get_env(:my_app, MyApp.Endpoint)[:inline_assets],
       file_path: Path.join([MyApp.Endpoint.config(:root), "/priv/static/css/foundation.min.css"]),
       static_path: static_path(@conn, "/css/foundation.min.css")) %>
   </head>
@@ -96,7 +96,7 @@ web/templates/layout/app.html.eex
     ... Whatever ...
  </body>
   <%= raw OfflineAsset.js(
-      inline: Application.get_env(:ariadne, MyApp.Endpoint)[:inline_assets],
+      inline: Application.get_env(:my_app, MyApp.Endpoint)[:inline_assets],
       file_path: Path.join([MyApp.Endpoint.config(:root), "/priv/static/js/vendor.bundle.js"]),
       static_path: static_path(@conn, "/js/vendor.bundle.js")) %>
 </html>
