@@ -20,6 +20,7 @@ Parameters are passed in as a map.
   at: "/cache.manifest",
   base_path: Path.join(Path.dirname(__ENV__.file), "../../priv/static"),
   offline_asset: true,
+  cache_digest: true,
   inline: Application.get_env(:my_app, MyApp.Endpoint)[:inline_assets],
   cache: [],
   network: [],
@@ -32,6 +33,7 @@ key | mandatory | value | example
 at  | X | at this url will cache manifest file provided eg: www.myapp.com/cache.manifest | "/cache.manifest"
 base_path | X | base path for assets files eg: /js/app.js will be looked up like this /priv/static/js/app.js | Path.join(Path.dirname(__ENV__.file), "../../priv/static")
 offline_asset| | use offline assets in views, see optional offline assets section | TRUE/FALSE
+cache_digest| | do not regenerate cache manifest on page load | TRUE/FALSE 
 inline| | if offline_asset is in use render assets inline or not in views, see examples in offline assets section | TRUE/FALSE
 cache | X |list of files that should be in the cache | ["/js/app.js", "/css/app.css"]
 network |  | list of endopoints which are available only when app is online | ["/api"]
@@ -155,3 +157,7 @@ Resulting:
   </script>
 </html>
 ````
+
+## Contributors
+
+[@ggpasqualino](https://github.com/ggpasqualino/) 
