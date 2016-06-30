@@ -2,6 +2,10 @@ defmodule Plug.PlugOffline do
   import Plug.Conn
 
   @spec init(map) :: map
+  def init(%{cache_digest: true} = options) do
+    put_in(options[:digest], cache_key(options[:cache], options[:base_path]))
+  end
+
   def init(options) do
     options
   end
@@ -18,9 +22,10 @@ defmodule Plug.PlugOffline do
     end
   end
 
-  @spec cache_content(map) :: String.t
+  @spec cache_content(map) :: binary
   def cache_content(options) do
-    ["CACHE MANIFEST", cache_key(options[:cache], options[:base_path])]
+    digest = options[:digest] || cache_key(options[:cache], options[:base_path])
+    ["CACHE MANIFEST", digest]
     |> cache(options)
     |> network(options)
     |> fallback(options)
@@ -30,7 +35,8 @@ defmodule Plug.PlugOffline do
   # When inline option present do not generate cache manifest entry for the assets file, though
   # the digest is still based on the content of all assets. Which make update possible when
   # assets changes
-  defp cache(body, %{offline_asset: true, inline: true} = _opts) do
+  @spec cache(list(binary), map) :: list(String.t)
+  defp cache(body, %{offline_asset: true, inline: true}) do
     body
   end
 
@@ -39,16 +45,18 @@ defmodule Plug.PlugOffline do
   end
 
   # https://bordeltabernacle.github.io/2016/01/04/notes-on-elixir-pattern-matching-maps.html
-  defp network(body, %{network: _network} = opts) do
-    body ++ ["NETWORK:" | opts[:network]]
+  @spec network(list(String.t), map) :: list(String.t)
+  defp network(body, %{network: network_opts}) do
+    body ++ ["NETWORK:" | network_opts]
   end
 
   defp network(body, _opts) do
     body
   end
 
-  defp fallback(body, %{fallback: _fallback} = opts) do
-    body ++ ["FALLBACK:" | opts[:fallback]]
+  @spec fallback(list(String.t), map) :: list(String.t)
+  defp fallback(body, %{fallback: fallback_opts}) do
+    body ++ ["FALLBACK:" | fallback_opts]
   end
 
   defp fallback(body, _opts) do
@@ -82,14 +90,14 @@ defmodule Plug.PlugOffline do
   @spec read_file(String.t) :: String.t
   defp read_file(file) do
     case File.read(file) do
-      { :ok, body } ->
-        :crypto.hash(:sha256, body) |> Base.encode16
-      { :error, _reason } -> ''
+      {:ok, body} ->
+        :sha256 |> :crypto.hash(body) |> Base.encode16
+      {:error, _reason} -> ''
     end
   end
 
   @spec magic_comment(String.t) :: String.t
   defp magic_comment(text) do
-    "# #{:crypto.hash(:sha256, text) |> Base.encode16}"
+    "# #{:sha256 |> :crypto.hash(text) |> Base.encode16}"
   end
 end

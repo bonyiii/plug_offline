@@ -31,7 +31,11 @@ defmodule PlugOffline.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:plug, "~> 1.1"}]
+    [
+      {:plug, "~> 1.1"},
+      {:credo, "~> 0.4", only: [:dev, :test]},
+      {:dialyxir, "~> 0.3", only: [:dev]}
+    ]
   end
 
   defp description do

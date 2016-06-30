@@ -1,1 +1,4 @@
-%{"plug": {:hex, :plug, "1.1.6"}}
+%{"bunt": {:hex, :bunt, "0.1.6"},
+  "credo": {:hex, :credo, "0.4.5"},
+  "dialyxir": {:hex, :dialyxir, "0.3.3"},
+  "plug": {:hex, :plug, "1.1.6"}}
