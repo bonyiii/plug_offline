@@ -57,12 +57,10 @@ A [good tutorial](http://www.html5rocks.com/en/tutorials/appcache/beginner/) for
 
 ## Installation
 
-Currently only available through github:
-
   1. Add plug_offline to your list of dependencies in `mix.exs`:
 
         def deps do
-          [{:plug_offline, github: "bonyiii/plug_offline"}]
+          [{:plug_offline, "~> 0.0.3"}]
         end
 
   2. Ensure plug_offline is started before your application:
