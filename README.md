@@ -1,6 +1,7 @@
 # PlugOffline
 
 [![Build Status](https://travis-ci.org/bonyiii/plug_offline.svg?branch=master)](https://travis-ci.org/bonyiii/plug_offline)
+[![Hex pm](http://img.shields.io/hexpm/v/plug_offline.svg?style=flat)](https://hex.pm/packages/plug_offline)
 
 This plug tries to mimic [wycats/rack-offline](https://github.com/wycats/rack-offline) gem's behaviour in elixir. Read its description first, it explains a lot.
 
