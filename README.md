@@ -7,7 +7,7 @@ This plug tries to mimic [wycats/rack-offline](https://github.com/wycats/rack-of
 
 Word of warning: Application cache [already deprecated](https://developer.mozilla.org/en-US/docs/Web/HTML/Using_the_application_cache) but the alternative [service workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) is experimental.
 
-Though Application Cache has some issues, it is still widely supported, check browser for [service workers](http://caniuse.com/#feat=serviceworkers) and [application cache](http://caniuse.com/#feat=offline-apps) 
+Though Application Cache has some issues, it is still widely supported, check browser for [service workers](http://caniuse.com/#feat=serviceworkers) and [application cache](http://caniuse.com/#feat=offline-apps)
 
 ## Usage
 Assuming phoenix framework, but should work without it:
@@ -27,14 +27,14 @@ Parameters are passed in as a map.
   network: [],
   fallback: [] }
 
-``` 
+```
 
-key | mandatory | value | example 
+key | mandatory | value | example
 ----|-----------|-------|--------
 at  | X | at this url will cache manifest file provided eg: www.myapp.com/cache.manifest | "/cache.manifest"
 base_path | X | base path for assets files eg: /js/app.js will be looked up like this /priv/static/js/app.js | Path.join(Path.dirname(__ENV__.file), "../../priv/static")
 offline_asset| | use offline assets in views, see optional offline assets section | TRUE/FALSE
-cache_digest| | do not regenerate cache manifest on page load | TRUE/FALSE 
+cache_digest| | do not regenerate cache manifest on page load | TRUE/FALSE
 inline| | if offline_asset is in use render assets inline or not in views, see examples in offline assets section | TRUE/FALSE
 cache | X |list of files that should be in the cache | ["/js/app.js", "/css/app.css"]
 network |  | list of endpoints which are available only when app is online | ["/api"]
@@ -74,7 +74,7 @@ A [good tutorial](http://www.html5rocks.com/en/tutorials/appcache/beginner/) for
 
 ### Offline Assets
 
-Many time when one develop an application using App Cache face the problem that an assets served through HTTPS. This is a must for security but App Cache cannot handle it - at least I was not able to make it work. 
+Many time when one develop an application using App Cache face the problem that an assets served through HTTPS. This is a must for security but App Cache cannot handle it - at least I was not able to make it work.
 
 If one tries to use the asset through CDN and HTTP but the app itself served through HTTPS you run into the mixed content error, modern browser gonna report error.
 
@@ -112,7 +112,7 @@ config :my_app, MyApp.Endpoint,
   inline_assets: false
 ```
 
-Resulting: 
+Resulting:
 
 ````html
 <!DOCTYPE html>
@@ -136,7 +136,7 @@ config :my_app, MyApp.Endpoint,
   inline_assets: true
 ```
 
-Resulting: 
+Resulting:
 
 ````html
 <!DOCTYPE html>
@@ -159,4 +159,4 @@ Resulting:
 
 ## Contributors
 
-[@ggpasqualino](https://github.com/ggpasqualino/) 
+[@ggpasqualino](https://github.com/ggpasqualino/)
