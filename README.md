@@ -7,10 +7,10 @@ This plug tries to mimic [wycats/rack-offline](https://github.com/wycats/rack-of
 
 Word of warning: Application cache [already deprecated](https://developer.mozilla.org/en-US/docs/Web/HTML/Using_the_application_cache) but the alternative [service workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) is experimental.
 
-Though Application Cache has some issues, it still widely supported, check browser for [service workers](http://caniuse.com/#feat=serviceworkers) and [application cache](http://caniuse.com/#feat=offline-apps) 
+Though Application Cache has some issues, it is still widely supported, check browser for [service workers](http://caniuse.com/#feat=serviceworkers) and [application cache](http://caniuse.com/#feat=offline-apps) 
 
 ## Usage
-Assuming phoenix framework, but should work wihtout it:
+Assuming phoenix framework, but should work without it:
 
 Add the following lines to: lib/my_app/endpoint.ex
 
@@ -37,7 +37,7 @@ offline_asset| | use offline assets in views, see optional offline assets sectio
 cache_digest| | do not regenerate cache manifest on page load | TRUE/FALSE 
 inline| | if offline_asset is in use render assets inline or not in views, see examples in offline assets section | TRUE/FALSE
 cache | X |list of files that should be in the cache | ["/js/app.js", "/css/app.css"]
-network |  | list of endopoints which are available only when app is online | ["/api"]
+network |  | list of endpoints which are available only when app is online | ["/api"]
 fallback |  |what to provide instead of large assets when app offline | ["images/large/ images/offline.jpg"]
 
 Then in web/templates/layout/app.html add/replace the following lines
@@ -78,7 +78,7 @@ Many time when one develop an application using App Cache face the problem that 
 
 If one tries to use the asset through CDN and HTTP but the app itself served through HTTPS you run into the mixed content error, modern browser gonna report error.
 
-The soultion is to pack everything into one huge HTML file in production.
+The solution is to pack everything into one huge HTML file in production.
 
 Using OfflineAssets
 
